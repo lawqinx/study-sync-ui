@@ -1,0 +1,35 @@
+.bg-green {
+  background-color: #bcd630;
+}
+
+/* progress bar */
+.progress {
+  overflow: visible;
+  height: 5px;
+  position: relative;
+  border-radius: 10px;
+  width: 100%;
+}
+.progress .progress-title {
+  position: absolute;
+  top: -22px;
+}
+.progress .progress-bar {
+  position: relative;
+  overflow: visible;
+  border-radius: 10px;
+}
+.progress .progress-bar span {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  opacity: 0;
+}
+.progress .progress-bar.appear span {
+  opacity: 1;
+}
+.progress-bar-percent {
+  position: absolute;
+  top: -12px;
+  right: -39px;
+}
