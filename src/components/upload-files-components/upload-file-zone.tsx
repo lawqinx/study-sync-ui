@@ -4,23 +4,30 @@ import DashboardSlider from "../dashboard-slider-components/dashboard-slider";
 import UploadFileBox from "./upload-file-box";
 import UploadFileBrowser from "./upload-file-browser";
 import { generateContents } from "../../api/post-api";
+import { useContentContext } from "../content-context";
 
 function UploadFileZone() {
+  const { setFlashCards, setQuizzes, setSummaries } = useContentContext();
+
   const [files, setFiles] = useState<File[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
+  const [isLoading, setIsLoading] = useState("");
+  const [isContentGenerated, setIsContentGenerated] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  const allUploadsDone =
-    files.length > 0 && files.every((file) => progressMap[file.name] === 100);
+  const shouldShowResults =
+    files.length > 0 &&
+    files.every((file) => progressMap[file.name] === 100) &&
+    isContentGenerated;
 
   useEffect(() => {
-    if (allUploadsDone && bottomRef.current) {
+    if (shouldShowResults && bottomRef.current) {
       setTimeout(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }, 300);
     }
-  }, [allUploadsDone]);
+  }, [shouldShowResults]);
 
   const handleCancel = (fileName: string) => {
     setFiles((prev) => prev.filter((file) => file.name !== fileName));
@@ -51,26 +58,46 @@ function UploadFileZone() {
           {files.length > 0 && (
             <button
               className="btn btn-medium btn-dark-gray-gradient border-radius-7 margin-20px-bottom d-table d-lg-inline-block md-margin-lr-auto text-uppercase"
+              disabled={!!isLoading}
               onClick={() => {
-                generateContents(files, (fileName, percent) => {
-                  setProgressMap((prev) => ({
-                    ...prev,
-                    [fileName]: percent,
-                  }));
-                });
+                generateContents(
+                  files,
+                  (fileName, percent) => {
+                    setProgressMap((prev) => ({
+                      ...prev,
+                      [fileName]: percent,
+                    }));
+                  },
+                  setIsLoading,
+                  setIsContentGenerated,
+                  setSummaries,
+                  setQuizzes,
+                  setFlashCards
+                );
               }}
             >
-              Generate Contents
+              {isLoading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  {isLoading}
+                </>
+              ) : (
+                "Generate Contents"
+              )}
             </button>
           )}
         </div>
       </div>
-      {allUploadsDone && (
+      {shouldShowResults && (
         <div ref={bottomRef}>
           <div className="container padding-100px-top sm-padding-50px-top">
             <DashboardSlider />
           </div>
-          <div style={{ height: "50px" }} />{" "}
+          <div style={{ height: "50px" }} />
         </div>
       )}
     </div>

@@ -1,4 +1,23 @@
+import { Link } from "react-router-dom";
+import { getUserProjects } from "../api/get-api";
+import { useEffect, useState } from "react";
+
 function NavBar() {
+  const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await getUserProjects(1);
+        setProjects(response.data);
+      } catch (err) {
+        console.error("Failed to fetch projects:", err);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   return (
     <div>
       <nav className="navbar no-margin-bottom bootsnav alt-font bg-dark-gray sidebar-nav sidebar-nav-style-1 navbar-expand-lg sm-margin-50px-top sm-no-padding-lr">
@@ -26,7 +45,7 @@ function NavBar() {
           <div id="navbar-menu" className="collapse navbar-collapse">
             <ul className="nav navbar-nav navbar-left-sidebar font-weight-500">
               <li>
-                <a href="#" title="Dashboard" className="center-link">
+                <Link to="/" title="Dashboard" className="center-link">
                   <img
                     src="images/ni-dashboard.png"
                     width="13"
@@ -34,10 +53,38 @@ function NavBar() {
                     alt=""
                   />{" "}
                   Dashboard
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" title="Upload">
+                <Link to="/summary" title="Summary">
+                  <img
+                    src="images/ni-subject2.png"
+                    width="15"
+                    height="15"
+                    alt=""
+                  />{" "}
+                  My Summary
+                </Link>
+              </li>
+              <li>
+                <Link to="/quizzes" title="Quizzes">
+                  <img src="images/ni-quiz.png" width="15" height="15" alt="" />{" "}
+                  My Quizzes
+                </Link>
+              </li>
+              <li>
+                <Link to="/flashcards" title="Flashcards">
+                  <img
+                    src="images/ni-flashcard.png"
+                    width="15"
+                    height="15"
+                    alt=""
+                  />{" "}
+                  My Flashcards
+                </Link>
+              </li>
+              <li>
+                <Link to="/" title="Upload">
                   <img
                     src="images/ni-new-project.png"
                     width="15"
@@ -45,7 +92,7 @@ function NavBar() {
                     alt=""
                   />{" "}
                   Create New Project
-                </a>
+                </Link>
               </li>
               <li className="navbar-left-separator">&nbsp;</li>
               <li>
@@ -53,50 +100,33 @@ function NavBar() {
                   Recent Projects
                 </p>
               </li>
-              <li>
-                <a href="#" title="Upload">
-                  <img
-                    src="images/ni-subject.png"
-                    width="12"
-                    height="12"
-                    alt=""
-                  />{" "}
-                  Maths
-                </a>
-              </li>
-              <li>
-                <a href="#" title="Upload">
-                  <img
-                    src="images/ni-subject.png"
-                    width="12"
-                    height="12"
-                    alt=""
-                  />{" "}
-                  Science
-                </a>
-              </li>
-              <li>
-                <a href="#" title="Upload">
-                  <img
-                    src="images/ni-subject.png"
-                    width="12"
-                    height="12"
-                    alt=""
-                  />{" "}
-                  Biology
-                </a>
-              </li>
-              <li>
-                <a href="#" title="Upload">
-                  <img
-                    src="images/ni-more2.png"
-                    width="12"
-                    height="12"
-                    alt=""
-                  />{" "}
-                  More
-                </a>
-              </li>
+              {projects.slice(0, 3).map((project) => (
+                <li key={project.id}>
+                  <a href="#" title={project.name}>
+                    <img
+                      src="images/ni-subject.png"
+                      width="12"
+                      height="12"
+                      alt=""
+                    />{" "}
+                    {project.name}
+                  </a>
+                </li>
+              ))}
+              {projects.length > 3 && (
+                <li>
+                  <a href="#" title="Upload">
+                    <img
+                      src="images/ni-more2.png"
+                      width="12"
+                      height="12"
+                      alt=""
+                    />{" "}
+                    More
+                  </a>
+                </li>
+              )}
+
               <li className="navbar-left-separator">&nbsp;</li>
               <li>
                 <p className="text-medium-gray text-small text-uppercase padding-30px-lr sm-padding-15px-lr margin-10px-bottom">

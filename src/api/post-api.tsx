@@ -1,10 +1,17 @@
 import axios from "axios";
+import { FlashCard, Quiz, Summary } from "../components/content-context";
 
 export const generateContents = async (
   files: File[],
   onProgress: (fileName: string, percent: number) => void,
-  setIsLoading: (message: string) => void
+  setIsLoading: (message: string) => void,
+  setIsContentGenerated: (done: boolean) => void,
+  setSummaries: (summaries: Summary[]) => void,
+  setQuizzes: (quizzes: Quiz[]) => void,
+  setFlashCards: (flashCards: FlashCard[]) => void
 ) => {
+  setIsLoading("Uploading files . . .");
+
   const uploadedResponse = await Promise.all(
     files.map((file) => {
       const formData = new FormData();
@@ -30,6 +37,8 @@ export const generateContents = async (
     "\\\\"
   );
 
+  setIsLoading("Creating project . . .");
+
   const projectId = await axios.post(
     "http://localhost:3420/api/generative/new",
     {
@@ -38,30 +47,26 @@ export const generateContents = async (
     }
   );
 
-  const summary = await axios.post(
-    "http://localhost:3420/api/generative/generateSummary",
-    {
-      project_id: projectId.data.project_id,
-    }
-  );
+  const project_id = projectId.data.project_id;
 
-  console.log("Summary:", summary);
+  setIsLoading("Generating content . . .");
 
-  const quizzes = await axios.post(
-    "http://localhost:3420/api/generative/generateQuizzes",
-    {
-      project_id: projectId.data.project_id,
-    }
-  );
+  const [summary, quizzes, flashCards] = await Promise.all([
+    axios.post("http://localhost:3420/api/generative/generateSummary", {
+      project_id,
+    }),
+    axios.post("http://localhost:3420/api/generative/generateQuizzes", {
+      project_id,
+    }),
+    axios.post("http://localhost:3420/api/generative/generateFlashcards", {
+      project_id,
+    }),
+  ]);
 
-  console.log("Quizzes", quizzes);
+  setSummaries(summary.data.content);
+  setQuizzes(quizzes.data.questions);
+  setFlashCards(flashCards.data.items);
 
-  const flashCards = await axios.post(
-    "http://localhost:3420/api/generative/generateFlashcards",
-    {
-      project_id: projectId.data.project_id,
-    }
-  );
-
-  console.log("flashCards", flashCards);
+  setIsLoading("");
+  setIsContentGenerated(true);
 };
