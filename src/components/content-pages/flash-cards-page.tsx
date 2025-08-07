@@ -1,10 +1,25 @@
-import { useContentContext } from "../content-context";
-import FlashCard from "../content/flash-card";
+import { useParams } from "react-router-dom";
+import { FlashCard, useContentContext } from "../content-context";
+import FlashCardComp from "../content/flash-card";
 import Footer from "../footer";
 import Header from "../header";
+import { useEffect, useState } from "react";
+import { getFlashcards } from "../../api/get-api";
 
 function FlashCardsPage() {
-  const { flashCards } = useContentContext();
+  const { id } = useParams();
+  const [fcards, setFcards]  = useState<FlashCard[]>([{
+    question: "",
+    answer: ""
+  }]); 
+  const {flashCards} = useContentContext();
+  
+  useEffect(() => {
+    if (!flashCards) {
+      getFlashcards(Number(id)).then((data) => setFcards(data.data));
+    }
+  }, [id, flashCards]);
+
   return (
     <div>
       <Header />
@@ -22,9 +37,9 @@ function FlashCardsPage() {
               </div>
             </div>
             <div className="row justify-content-center row-cols-1 row-cols-lg-3 row-cols-md-2">
-              {flashCards.splice(0, 3).map((card) => {
+              {fcards.splice(0,3).map((card) => {
                 return (
-                  <FlashCard question={card.question} answer={card.answer} />
+                  <FlashCardComp question={card.question} answer={card.answer} />
                 );
               })}
             </div>

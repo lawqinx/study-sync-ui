@@ -1,9 +1,25 @@
-import { useContentContext } from "../content-context";
-import Quiz from "../content/quiz";
+import { useParams } from "react-router-dom";
+import { Quiz, useContentContext } from "../content-context";
+import QuizComp from "../content/quiz";
 import Header from "../header";
+import { useEffect, useState } from "react";
+import { getQuizzes } from "../../api/get-api";
 
 function QuizzesPage() {
-  const { quizzes } = useContentContext();
+  const { id } = useParams();
+  const [quizze, setQuizzes]  = useState<Quiz[]>([{
+    question: "",
+    options: ["", "", "", ""],
+    answer: "",
+    explanation: ""
+  }]); 
+  const {quizzes} = useContentContext();
+  
+  useEffect(() => {
+    if (!quizzes) {
+      getQuizzes(Number(id)).then((data) => setQuizzes(data.data));
+    }
+  }, [id, quizzes]);
 
   return (
     <div>
@@ -29,9 +45,9 @@ function QuizzesPage() {
                 </button>
               </div>
             </div>
-            {quizzes.map((quiz) => {
+            {quizze.map((quiz) => {
               return (
-                <Quiz
+                <QuizComp
                   question={quiz.question}
                   options={quiz.options}
                   answer={quiz.answer}

@@ -3,7 +3,7 @@ interface FlashCardProps {
   answer: string;
 }
 
-function FlashCard({ question, answer }: FlashCardProps) {
+function FlashCardComp({ question, answer }: FlashCardProps) {
   return (
     <div className="col-sm-8 team-block text-start feature-box-15 md-margin-30px-bottom sm-margin-15px-bottom last-paragraph-no-margin wow animate__fadeInUp">
       <figure>
@@ -28,4 +28,4 @@ function FlashCard({ question, answer }: FlashCardProps) {
   );
 }
 
-export default FlashCard;
+export default FlashCardComp;

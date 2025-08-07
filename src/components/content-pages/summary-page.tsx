@@ -1,9 +1,23 @@
-import { useContentContext } from "../content-context";
-import Summary from "../content/summary";
+import { useParams } from "react-router-dom";
+import { Summary, useContentContext } from "../content-context";
+import SummaryComp from "../content/summary";
 import Header from "../header";
+import { useEffect, useState } from "react";
+import { getSummaries } from "../../api/get-api";
 
 function SummaryPage() {
-  const { summaries } = useContentContext();
+  const { id } = useParams();
+  const [summary, setSummary]  = useState<Summary[]>([{
+    chapter: "",
+    summary: ""
+  }]); 
+  const {summaries} = useContentContext();
+  
+  useEffect(() => {
+    if (!summaries) {
+      getSummaries(Number(id)).then((data) => setSummary(data.data));
+    }
+  }, [id, summaries]);
 
   return (
     <div>
@@ -22,11 +36,11 @@ function SummaryPage() {
               </div>
             </div>
             <div className="row">
-              {summaries.map((summary) => {
+              {summary.map((sm) => {
                 return (
-                  <Summary
-                    chapter={summary.chapter}
-                    summary={summary.summary}
+                  <SummaryComp
+                    chapter={sm.chapter}
+                    summary={sm.summary}
                   />
                 );
               })}

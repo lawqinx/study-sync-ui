@@ -23,7 +23,7 @@ function NavBar() {
       <nav className="navbar no-margin-bottom bootsnav alt-font bg-dark-gray sidebar-nav sidebar-nav-style-1 navbar-expand-lg sm-margin-50px-top sm-no-padding-lr">
         <div className="col-12 sidenav-header border-width-1-8 border-right border-bottom border-color-extra-dark-gray">
           <div className="logo-holder">
-            <a href="#" className="d-inline-block logo sm-padding-15px-left">
+            <a href="/" className="d-inline-block logo sm-padding-15px-left">
               <img
                 alt="StudySync Ai"
                 src="images/logo-white-big.png"
@@ -100,9 +100,9 @@ function NavBar() {
                   Recent Projects
                 </p>
               </li>
-              {projects.slice(0, 3).map((project) => (
+              {projects.map((project) => (
                 <li key={project.id}>
-                  <a href="#" title={project.name}>
+                  <a href={`/project/${project.id}`} title={project.name}>
                     <img
                       src="images/ni-subject.png"
                       width="12"
@@ -113,19 +113,6 @@ function NavBar() {
                   </a>
                 </li>
               ))}
-              {projects.length > 3 && (
-                <li>
-                  <a href="#" title="Upload">
-                    <img
-                      src="images/ni-more2.png"
-                      width="12"
-                      height="12"
-                      alt=""
-                    />{" "}
-                    More
-                  </a>
-                </li>
-              )}
 
               <li className="navbar-left-separator">&nbsp;</li>
               <li>

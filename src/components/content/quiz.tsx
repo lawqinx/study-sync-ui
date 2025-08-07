@@ -7,7 +7,7 @@ interface QuizProps {
   explanation: string;
 }
 
-function Quiz({ question, options, answer, explanation }: QuizProps) {
+function QuizComp({ question, options, answer, explanation }: QuizProps) {
   console.log(answer);
   const [selected, setSelected] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -78,4 +78,4 @@ function Quiz({ question, options, answer, explanation }: QuizProps) {
   );
 }
 
-export default Quiz;
+export default QuizComp;

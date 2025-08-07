@@ -13,7 +13,7 @@ import "swiper/css/navigation";
 
 Swiper.use([Mousewheel, Scrollbar]);
 
-function DashboardSlider() {
+function DashboardSlider( props: any ) {
   useEffect(() => {
     const slider = document.querySelector(".swiper") as HTMLElement;
 
@@ -25,6 +25,7 @@ function DashboardSlider() {
       new Swiper(slider, options);
     }
   }, []);
+  console.log(props);
 
   return (
     <div className="container padding-100px-top sm-padding-50px-top">
@@ -33,9 +34,9 @@ function DashboardSlider() {
         data-slider-options='{ "slidesPerView": "auto", "allowTouchMove":true, "grabCursor":true, "spaceBetween": 30, "keyboardControl":true, "speed":1000, "keyboard": { "enabled": true }, "scrollbar": { "el": ".swiper-scrollbar", "draggable": true, "hide": false, "snapOnRelease": true }, "mousewheel":{ "enable": true }, "navigation": { "nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev" }, "pagination": { "el": null } }'
       >
         <div className="swiper-wrapper padding-35px-bottom">
-          <SummaryButton />
-          <QuizzesButton />
-          <FlashCardsButton />
+          <SummaryButton id={props.id}/>
+          <QuizzesButton id={props.id}/>
+          <FlashCardsButton id={props.id}/>
           <PerformanceAnalyticsButton />
           <ExamPredictionButton />
           <div className="swiper-slide w-150px sm-w-100 sm-h-auto"></div>

@@ -3,7 +3,7 @@ interface SummaryProps {
   summary: string;
 }
 
-function Summary({ chapter, summary }: SummaryProps) {
+function SummaryComp({ chapter, summary }: SummaryProps) {
   return (
     <div style={{ color: "#d3d3d3" }}>
       <div className="col-12 p-0">
@@ -15,4 +15,4 @@ function Summary({ chapter, summary }: SummaryProps) {
   );
 }
 
-export default Summary;
+export default SummaryComp;
